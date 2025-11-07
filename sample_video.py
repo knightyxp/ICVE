@@ -250,6 +250,19 @@ def _chunk_list(seq, n):
     return [seq[i:i + avg] for i in range(0, len(seq), avg)]
 
 
+def _split_items(items, split_index: int, split_total: int, round_robin: bool = False):
+    if split_total <= 1:
+        return items
+    split_index = max(0, min(split_index, split_total - 1))
+    if round_robin:
+        return [it for i, it in enumerate(items) if i % split_total == split_index]
+    # contiguous chunk split
+    items_per = len(items) // split_total
+    start = split_index * items_per
+    end = (split_index + 1) * items_per if split_index != split_total - 1 else len(items)
+    return items[start:end]
+
+
 def main():
     args = parse_args()
     print(args)
@@ -281,6 +294,38 @@ def main():
                 pending.append(it)
         items = pending
         logger.info(f"Pending items: {len(items)}")
+
+        # Optional manual sharding via environment variables (single process or multi-process均可用)
+        split_total = int(os.environ.get("SPLIT_TOTAL", "1") or "1")
+        split_index = int(os.environ.get("SPLIT_INDEX", "0") or "0")
+        rr = os.environ.get("ROUND_ROBIN_SPLIT", "0") in ("1", "true", "True")
+        if split_total > 1:
+            before = len(items)
+            items = _split_items(items, split_index, split_total, round_robin=rr)
+            logger.info(f"Shard applied: index {split_index}/{split_total}, took {len(items)}/{before} items")
+
+        # Single-process mode: avoid multiprocessing entirely
+        single_process = os.environ.get("SINGLE_PROCESS", "0") in ("1", "true", "True")
+        if single_process:
+            device = "cuda:0" if torch.cuda.is_available() else "cpu"
+            logger.info(f"Running SINGLE_PROCESS mode on {device} with {len(items)} items...")
+            from argparse import Namespace
+            worker_args = Namespace(**vars(args))
+            try:
+                if device.startswith("cuda"):
+                    torch.cuda.set_device(int(device.split(":")[1]))
+            except Exception:
+                pass
+            sampler = HunyuanVideoSampler.from_pretrained(models_root_path, args=worker_args, device=device)
+            worker_args = sampler.args
+            for idx, item in enumerate(items):
+                try:
+                    logger.info(f"[Single] ({idx+1}/{len(items)}) {item.get('video')}")
+                    _process_one(sampler, worker_args, item, save_path, auto_hw=True)
+                except Exception as e:
+                    logger.exception(f"[Single] Failed on item {item}: {e}")
+            logger.info("Single-process run finished.")
+            return
 
         if torch.cuda.is_available():
             device_count = torch.cuda.device_count()

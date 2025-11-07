@@ -8,6 +8,5 @@ python sample_video.py \
     --cfg-scale 6.0 \
     --flow-shift 7.0 \
     --flow-reverse \
-    --use-cpu-offload \
     --save-path ./hunyuan_results \
     --video /scratch3/yan204/yxp/VideoX_Fun/data/test_json/4tasks_rem_add_swap_local-style_test.json

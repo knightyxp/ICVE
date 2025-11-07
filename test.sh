@@ -1,3 +1,4 @@
+export CUDA_VISIBLE_DEVICES=0,1,2,3
 python sample_video.py \
     --dit-weight checkpoint/diffusion_pytorch_model.safetensors \
     --video-length 33 \

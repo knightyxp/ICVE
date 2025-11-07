@@ -1,0 +1,1 @@
+ps -ef | grep sample_video.py | grep -v grep | awk '{print $2}' | xargs kill -9

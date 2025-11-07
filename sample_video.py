@@ -137,6 +137,10 @@ def _get_video_hw(video_path: str):
         reader.close()
 
 
+def _coalesce_none(value, fallback):
+    return fallback if value is None else value
+
+
 def _process_one(sampler: HunyuanVideoSampler, base_args, item: dict, save_path: str, auto_hw: bool = False):
     prompt = item["prompt"]
     video_path = item["video"]
@@ -153,14 +157,14 @@ def _process_one(sampler: HunyuanVideoSampler, base_args, item: dict, save_path:
         height = item.get("height") or base_args.video_size[0]
         width = item.get("width") or base_args.video_size[1]
     video_length = item.get("video_length") or base_args.video_length
-    seed = item.get("seed", base_args.seed)
-    negative_prompt = item.get("neg_prompt", base_args.neg_prompt)
-    infer_steps = item.get("infer_steps", base_args.infer_steps)
-    guidance_scale = item.get("cfg_scale", base_args.cfg_scale)
-    num_videos = item.get("num_videos", base_args.num_videos)
-    flow_shift = item.get("flow_shift", base_args.flow_shift)
-    batch_size = item.get("batch_size", base_args.batch_size)
-    embedded_cfg_scale = item.get("embedded_cfg_scale", base_args.embedded_cfg_scale)
+    seed = _coalesce_none(item.get("seed"), base_args.seed)
+    negative_prompt = _coalesce_none(item.get("neg_prompt"), base_args.neg_prompt)
+    infer_steps = _coalesce_none(item.get("infer_steps"), base_args.infer_steps)
+    guidance_scale = _coalesce_none(item.get("cfg_scale"), base_args.cfg_scale)
+    num_videos = _coalesce_none(item.get("num_videos"), base_args.num_videos)
+    flow_shift = _coalesce_none(item.get("flow_shift"), base_args.flow_shift)
+    batch_size = _coalesce_none(item.get("batch_size"), base_args.batch_size)
+    embedded_cfg_scale = _coalesce_none(item.get("embedded_cfg_scale"), base_args.embedded_cfg_scale)
 
     base = _make_base_from_item(item)
     output_video_path = os.path.join(save_path, f"{base}_gen.mp4")

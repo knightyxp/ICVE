@@ -167,10 +167,10 @@ def _process_one(sampler: HunyuanVideoSampler, base_args, item: dict, save_path:
     embedded_cfg_scale = _coalesce_none(item.get("embedded_cfg_scale"), base_args.embedded_cfg_scale)
 
     base = _make_base_from_item(item)
-    output_video_path = os.path.join(save_path, f"{base}_gen.mp4")
-    input_video_path = os.path.join(save_path, f"{base}_input.mp4")
-    compare_video_path = os.path.join(save_path, f"{base}_compare.mp4")
-    info_path = os.path.join(save_path, f"{base}_gen_info.txt")
+    output_video_path = os.path.join(save_path, f"gen_{base}.mp4")
+    input_video_path = os.path.join(save_path, f"gen_{base}_input.mp4")
+    compare_video_path = os.path.join(save_path, f"gen_{base}_compare.mp4")
+    info_path = os.path.join(save_path, f"gen_{base}_info.txt")
     if os.path.exists(output_video_path):
         logger.info(f"Skip existing: {output_video_path}")
         return
@@ -289,7 +289,7 @@ def main():
         pending = []
         for it in items:
             base = _make_base_from_item(it)
-            gen_path = os.path.join(save_path, f"{base}_gen.mp4")
+            gen_path = os.path.join(save_path, f"gen_{base}.mp4")
             if not os.path.exists(gen_path):
                 pending.append(it)
         items = pending

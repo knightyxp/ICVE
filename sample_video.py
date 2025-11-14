@@ -92,16 +92,34 @@ def _normalize_to_01(video: torch.Tensor) -> torch.Tensor:
 
 def _load_input_video_frames(video_path: str, target_frames: int) -> torch.Tensor:
     reader = imageio.get_reader(video_path)
-    frames = []
     try:
-        for i in range(target_frames):
-            try:
-                frame = reader.get_data(i)
-            except IndexError:
-                frame = frames[-1] if frames else np.zeros((480, 832, 3), dtype=np.uint8)
+        total_frames = reader.count_frames()
+    except Exception:
+        total_frames = sum(1 for _ in reader)
+        reader = imageio.get_reader(video_path)
+    
+    # Calculate stride for uniform sampling
+    stride = max(1, total_frames // target_frames)
+    start_frame = torch.randint(0, max(1, total_frames - stride * target_frames), (1,))[0].item()
+    
+    frames = []
+    original_height, original_width = None, None
+    
+    for i in range(target_frames):
+        idx = start_frame + i * stride
+        if idx >= total_frames:
+            break
+        try:
+            frame = reader.get_data(idx)
+            if original_height is None:
+                original_height, original_width = frame.shape[0], frame.shape[1]
             frames.append(frame)
-    finally:
-        reader.close()
+        except IndexError:
+            break
+    
+    reader.close()
+    
+    
     arr = np.array(frames)  # (T, H, W, C)
     tensor = torch.from_numpy(arr).permute(3, 0, 1, 2).unsqueeze(0).float()  # [1,C,T,H,W]
     tensor = tensor * (2.0 / 255.0) - 1.0  # [-1,1]

@@ -1,7 +1,7 @@
 export CUDA_VISIBLE_DEVICES=0,1,2,3
 python sample_video.py \
     --dit-weight checkpoint/diffusion_pytorch_model.safetensors \
-    --video-length 161 \
+    --video-length 121 \
     --infer-steps 50 \
     --seed 42 \
     --embedded-cfg-scale 1.0 \

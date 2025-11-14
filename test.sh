@@ -9,5 +9,4 @@ python sample_video.py \
     --flow-shift 7.0 \
     --flow-reverse \
     --save-path ./long_video_results_97_frames \
-    --use_cpu_offload \
     --video /scratch3/yan204/yxp/VideoX_Fun/data/test_json/long_video_new.json 

@@ -1,6 +1,6 @@
 python sample_video.py \
     --dit-weight checkpoint/diffusion_pytorch_model.safetensors \
-    --video-size 384 240 \
+    --video-size3 384 208 \
     --video-length 121 \
     --infer-steps 50 \
     --prompt "Replace the brown tracksuit with a cream knit dress (knee length) paired with simple white sneakers; keep motion and lighting consistent" \

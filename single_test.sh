@@ -1,0 +1,14 @@
+python sample_video.py \
+    --dit-weight checkpoint/diffusion_pytorch_model.safetensors \
+    --video-size 384 240 \
+    --video-length 121 \
+    --infer-steps 50 \
+    --prompt "Replace the brown tracksuit with a cream knit dress (knee length) paired with simple white sneakers; keep motion and lighting consistent" \
+    --video "/scratch3/yan204/yxp/VideoX_Fun/sora_gen_multi-scene.mp4" \
+    --seed 42 \
+    --embedded-cfg-scale 1.0 \
+    --cfg-scale 6.0 \
+    --flow-shift 7.0 \
+    --flow-reverse \
+    --use-cpu-offload \
+    --save-path ./long_video_results_121_frames

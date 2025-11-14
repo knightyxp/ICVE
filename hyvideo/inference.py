@@ -9,6 +9,8 @@ from loguru import logger
 
 import torch
 import torch.distributed as dist
+import numpy as np
+import imageio
 from hyvideo.constants import PROMPT_TEMPLATE, NEGATIVE_PROMPT, PRECISION_TO_TYPE
 from hyvideo.vae import load_vae
 from hyvideo.modules import load_model
@@ -19,7 +21,6 @@ from hyvideo.modules.fp8_optimization import convert_fp8_linear
 from hyvideo.diffusion.schedulers import FlowMatchDiscreteScheduler
 from hyvideo.diffusion.pipelines import HunyuanVideoPipeline
 
-from decord import VideoReader, cpu
 import torchvision.transforms.functional as F
 from torchvision import transforms
 from safetensors.torch import load_file as safetensors_load_file
@@ -76,6 +77,51 @@ class ResizeCropAspectCenter:
 
         else:
             raise ValueError(f"Unsupported tensor shape {img.shape}, expected 3D or 4D.")
+
+
+def _load_video_frames_with_stride(
+    video_path: str,
+    target_frames: int,
+    fallback_size: Tuple[int, int],
+) -> torch.Tensor:
+    reader = imageio.get_reader(video_path)
+    try:
+        total_frames = reader.count_frames()
+    except Exception:
+        total_frames = sum(1 for _ in reader)
+        reader = imageio.get_reader(video_path)
+
+    stride = max(1, total_frames // target_frames) if target_frames > 0 else 1
+    max_offset = max(1, total_frames - stride * target_frames)
+    start_frame = torch.randint(0, max_offset, (1,)).item() if total_frames > 0 else 0
+
+    frames = []
+    frame_height, frame_width = fallback_size
+    for i in range(target_frames):
+        idx = start_frame + i * stride
+        if idx >= total_frames:
+            break
+        try:
+            frame = reader.get_data(idx)
+            frame_height, frame_width = frame.shape[0], frame.shape[1]
+            frames.append(frame)
+        except IndexError:
+            break
+
+    reader.close()
+
+    if not frames:
+        raise ValueError(f"Failed to sample frames from video: {video_path}")
+
+    while len(frames) < target_frames:
+        if frames:
+            frames.append(frames[-1].copy())
+        else:
+            frames.append(np.zeros((frame_height, frame_width, 3), dtype=np.uint8))
+
+    arr = np.stack(frames, axis=0)  # (T, H, W, C)
+    tensor = torch.from_numpy(arr).permute(0, 3, 1, 2).float() / 255.0  # (T, C, H, W)
+    return tensor
 
 
 class Inference(object):
@@ -605,9 +651,11 @@ class HunyuanVideoSampler(Inference):
         # Load original video
         # ========================================================================
 
-        video_reader = VideoReader(video, ctx=cpu(0))
-        video_org = video_reader.get_batch(list(range(target_video_length))).asnumpy()
-        video_org = torch.from_numpy(video_org).permute(0, 3, 1, 2).float() / 255.0
+        video_org = _load_video_frames_with_stride(
+            video,
+            target_video_length,
+            (target_height, target_width),
+        )
         
         video_transform = transforms.Compose([
             ResizeCropAspectCenter(target_height, target_width),

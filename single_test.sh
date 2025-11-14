@@ -3,7 +3,7 @@ python sample_video.py \
     --video-size 384 208 \
     --video-length 141 \
     --infer-steps 50 \
-    --prompt "Replace the brown tracksuit with a cream knit dress (knee length) paired with simple white sneakers; keep motion and lighting consistent" \
+    --prompt "Replace her brown tracksuit with a bright red leather jacket and black leggings, add realistic highlights on the jacket, keep motion and shadows consistent" \
     --video "/scratch3/yan204/yxp/VideoX_Fun/sora_gen_multi-scene.mp4" \
     --seed 42 \
     --embedded-cfg-scale 1.0 \

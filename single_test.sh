@@ -1,7 +1,7 @@
 python sample_video.py \
     --dit-weight checkpoint/diffusion_pytorch_model.safetensors \
     --video-size 400 704 \
-    --video-length 44 \
+    --video-length 33 \
     --infer-steps 50 \
     --prompt "Remove the man with short dark hair wearing a gray suit on the right" \
     --video "assets/gen_grounding_030_1_input.mp4" \

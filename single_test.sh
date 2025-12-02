@@ -1,14 +1,14 @@
 python sample_video.py \
     --dit-weight checkpoint/diffusion_pytorch_model.safetensors \
-    --video-size 384 208 \
-    --video-length 141 \
+    --video-size 400 704 \
+    --video-length 44 \
     --infer-steps 50 \
-    --prompt "Replace her brown tracksuit with a bright red leather jacket and black leggings, add realistic highlights on the jacket, keep motion and shadows consistent" \
-    --video "/scratch3/yan204/yxp/VideoX_Fun/sora_gen_multi-scene.mp4" \
+    --prompt "Remove the man with short dark hair wearing a gray suit on the right" \
+    --video "assets/gen_grounding_030_1_input.mp4" \
     --seed 42 \
     --embedded-cfg-scale 1.0 \
     --cfg-scale 6.0 \
     --flow-shift 7.0 \
     --flow-reverse \
     --use-cpu-offload \
-    --save-path ./long_video_results_141_frames
+    --save-path ./motivation_rem

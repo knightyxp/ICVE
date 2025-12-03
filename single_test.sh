@@ -1,14 +1,14 @@
 python sample_video.py \
     --dit-weight checkpoint/diffusion_pytorch_model.safetensors \
-    --video-size 400 704 \
+    --video-size 336 592 \
     --video-length 33 \
     --infer-steps 50 \
-    --prompt "Remove the little girl with curly hair wearing a light-colored shirt on the right." \
-    --video "/scratch3/yan204/yxp/Senorita/grounding_upload/23/044c8d9537fd850d9459b79b0dfdcf45_org_reshape.mp4" \
+    --prompt "Remove the blue credit card on the far right." \
+    --video "/scratch3/yan204/yxp/Senorita/obj_removal_videos_upload2/71/1ba7cd0cc2acc28c983617895399f778_org.mp" \
     --seed 42 \
     --embedded-cfg-scale 1.0 \
     --cfg-scale 6.0 \
     --flow-shift 7.0 \
     --flow-reverse \
     --use-cpu-offload \
-    --save-path ./motivation_rem_01
+    --save-path ./motivation_org

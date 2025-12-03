@@ -3,12 +3,12 @@ python sample_video.py \
     --video-size 336 592 \
     --video-length 33 \
     --infer-steps 50 \
-    --prompt "Remove the credit card with a gradient design on the right." \
-    --video "/scratch3/yan204/yxp/Senorita/obj_removal_videos_upload2/71/1ba7cd0cc2acc28c983617895399f778_org.mp4" \
+    --prompt "Remove the young man with red hair wearing green shirt on the right." \
+    --video "/scratch3/yan204/yxp/Senorita/grounding_upload/51/36b4deba1556f8bc34df8941e91c84de_org_reshape.mp4" \
     --seed 42 \
     --embedded-cfg-scale 1.0 \
     --cfg-scale 6.0 \
     --flow-shift 7.0 \
     --flow-reverse \
     --use-cpu-offload \
-    --save-path ./motivation_rem_01
+    --save-path ./motivation_grounding_024_2

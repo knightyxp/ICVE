@@ -3,7 +3,7 @@ python sample_video.py \
     --video-size 400 704 \
     --video-length 33 \
     --infer-steps 50 \
-    --prompt "emove the little girl with double buns wearing pink glasses on the left" \
+    --prompt "Remove the little girl with curly hair wearing a light-colored shirt on the right." \
     --video "/scratch3/yan204/yxp/Senorita/grounding_upload/23/044c8d9537fd850d9459b79b0dfdcf45_org_reshape.mp4" \
     --seed 42 \
     --embedded-cfg-scale 1.0 \
@@ -11,4 +11,4 @@ python sample_video.py \
     --flow-shift 7.0 \
     --flow-reverse \
     --use-cpu-offload \
-    --save-path ./motivation_rem_new
+    --save-path ./motivation_rem_01

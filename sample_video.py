@@ -126,13 +126,13 @@ def _load_input_video_frames(video_path: str, target_frames: int) -> torch.Tenso
     return tensor
 
 
-def _save_input_video(tensor: torch.Tensor, file_path: str, fps: int = 24):
+def _save_input_video(tensor: torch.Tensor, file_path: str, fps: int = 8):
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     tensor01 = _normalize_to_01(tensor.detach().cpu())
     save_videos_grid(tensor01, file_path, fps=fps)
 
 
-def _save_side_by_side(input_tensor: torch.Tensor, sample_tensor: torch.Tensor, file_path: str, fps: int = 24):
+def _save_side_by_side(input_tensor: torch.Tensor, sample_tensor: torch.Tensor, file_path: str, fps: int = 8):
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     a = _normalize_to_01(input_tensor.detach().cpu())
     b = _normalize_to_01(sample_tensor.detach().cpu())
@@ -222,12 +222,12 @@ def _process_one(sampler: HunyuanVideoSampler, base_args, item: dict, save_path:
         logger.warning(f"No sample generated for {base}")
         return
     sample_tensor = samples[0].unsqueeze(0)
-    save_videos_grid(sample_tensor, output_video_path, fps=24)
+    save_videos_grid(sample_tensor, output_video_path, fps=8)
     logger.info(f"Saved video → {output_video_path}")
     # Save input and side-by-side if available
     if input_tensor is not None:
-        _save_input_video(input_tensor, input_video_path, fps=24)
-        _save_side_by_side(input_tensor, sample_tensor, compare_video_path, fps=24)
+        _save_input_video(input_tensor, input_video_path, fps=8)
+        _save_side_by_side(input_tensor, sample_tensor, compare_video_path, fps=8)
     # Save prompt info
     try:
         with open(info_path, "w", encoding="utf-8") as f:
@@ -404,7 +404,7 @@ def main():
             sample = samples[i].unsqueeze(0)
             time_flag = datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d-%H:%M:%S")
             cur_save_path = f"{save_path}/{time_flag}_seed{outputs['seeds'][i]}_{outputs['prompts'][i][:100].replace('/','')}.mp4"
-            save_videos_grid(sample, cur_save_path, fps=24)
+            save_videos_grid(sample, cur_save_path, fps=8)
             logger.info(f"Sample save to: {cur_save_path}")
 
 if __name__ == "__main__":

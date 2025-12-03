@@ -3,12 +3,12 @@ python sample_video.py \
     --video-size 400 704 \
     --video-length 33 \
     --infer-steps 50 \
-    --prompt "Remove the man with short dark hair wearing a gray suit on the right" \
-    --video "assets/gen_grounding_030_1_input.mp4" \
+    --prompt "emove the little girl with double buns wearing pink glasses on the left" \
+    --video "/scratch3/yan204/yxp/Senorita/grounding_upload/23/044c8d9537fd850d9459b79b0dfdcf45_org_reshape.mp4" \
     --seed 42 \
     --embedded-cfg-scale 1.0 \
     --cfg-scale 6.0 \
     --flow-shift 7.0 \
     --flow-reverse \
     --use-cpu-offload \
-    --save-path ./motivation_rem
+    --save-path ./motivation_rem_new

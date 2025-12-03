@@ -3,7 +3,7 @@ python sample_video.py \
     --video-size 336 592 \
     --video-length 33 \
     --infer-steps 50 \
-    --prompt "Remove the blue credit card on the far right." \
+    --prompt "Remove the credit card on the far right." \
     --video "/scratch3/yan204/yxp/Senorita/obj_removal_videos_upload2/71/1ba7cd0cc2acc28c983617895399f778_org.mp4" \
     --seed 42 \
     --embedded-cfg-scale 1.0 \

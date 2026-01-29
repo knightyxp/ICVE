@@ -1,6 +1,6 @@
 python sample_video.py \
     --dit-weight checkpoint/diffusion_pytorch_model.safetensors \
-    --video-size 336 592 \
+    --video-size 400 704 \
     --video-length 33 \
     --infer-steps 50 \
     --prompt "Remove the young man with red hair wearing green shirt on the right." \

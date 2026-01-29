@@ -39,6 +39,9 @@ echo "Benchmark runs: ${BENCHMARK_RUNS}"
 echo "=============================================="
 
 export CUDA_VISIBLE_DEVICES=0
+# Pass efficiency test settings via environment variables
+export WARMUP_RUNS=${WARMUP_RUNS}
+export BENCHMARK_RUNS=${BENCHMARK_RUNS}
 
 python icve_efficiency_test.py \
     --dit-weight "${DIT_WEIGHT}" \
@@ -52,9 +55,7 @@ python icve_efficiency_test.py \
     --flow-reverse \
     --use-cpu-offload \
     --save-path "${OUTPUT_DIR}" \
-    --video "${TEST_JSON}" \
-    --warmup-runs ${WARMUP_RUNS} \
-    --benchmark-runs ${BENCHMARK_RUNS}
+    --video "${TEST_JSON}"
 
 echo ""
 echo "=============================================="

@@ -257,14 +257,10 @@ def main():
     # Parse base args from command line
     args = parse_args()
     
-    # Additional efficiency test args
-    parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument("--warmup-runs", type=int, default=1, help="Number of warmup runs")
-    parser.add_argument("--benchmark-runs", type=int, default=3, help="Number of benchmark runs")
-    eff_args, _ = parser.parse_known_args()
-    
-    warmup_runs = eff_args.warmup_runs
-    benchmark_runs = eff_args.benchmark_runs
+    # Additional efficiency test args via environment variables
+    # (since hyvideo's parse_args() doesn't support unknown arguments)
+    warmup_runs = int(os.environ.get("WARMUP_RUNS", "1"))
+    benchmark_runs = int(os.environ.get("BENCHMARK_RUNS", "3"))
     
     models_root_path = Path(args.model_base)
     if not models_root_path.exists():

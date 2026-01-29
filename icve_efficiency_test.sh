@@ -53,7 +53,6 @@ python icve_efficiency_test.py \
     --cfg-scale ${CFG_SCALE} \
     --flow-shift ${FLOW_SHIFT} \
     --flow-reverse \
-    --use-cpu-offload \
     --save-path "${OUTPUT_DIR}" \
     --video "${TEST_JSON}"
 
